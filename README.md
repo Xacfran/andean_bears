@@ -1,2 +1,2 @@
-# andean_bears
-Movement Ecology of Tremartos ornatus in Ecuador
+# Movement Ecology of *Tremartos ornatus* in the Ecuadorian Andes
+
