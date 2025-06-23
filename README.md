@@ -1,2 +1,2 @@
-# Movement Ecology of *Tremartos ornatus* in the Ecuadorian Andes
+# Movement Ecology of *Tremarctos ornatus* in the Ecuadorian Andes
 
