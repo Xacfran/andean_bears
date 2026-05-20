@@ -11,5 +11,9 @@ Code will be available upon publication.
 
 # Citation
 
-If you use data or code from this project, please cite the following publication: TBD.
+This work can currently be found as a preprint: 
+> Francisco X. Castellanos, David Jackson, Stefano Mezzini, Jorge Brito, and Armando Castellanos. (2026).
+> Rethinking the movement ecology of Andean bears: temperature-driven cathemerality and seasonal space-use cycles.
+> bioRxiv 2026.05.11.720697
 
+[![DOI](https://img.shields.io/badge/DOI-10.64898%2F2026.05.11.720697-%23009e73.svg?style=for-the-badge)](https://doi.org/10.64898/2026.05.11.720697)
