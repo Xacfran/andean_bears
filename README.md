@@ -12,7 +12,7 @@ Code will be available upon publication.
 # Citation
 
 This work can currently be found as a preprint: 
-> Francisco X. Castellanos, David Jackson, Stefano Mezzini, Jorge Brito, and Armando Castellanos. (2026).
+> Francisco X. Castellanos<a itemprop="sameAs" href="https://orcid.org/0000-0003-0955-8185" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon"></a>, David Jackson, Stefano Mezzini<a itemprop="sameAs" href="https://orcid.org/0000-0001-8551-7436" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon"></a>, Jorge Brito<a itemprop="sameAs" href="https://orcid.org/0000-0002-3410-6669" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon"></a>, and Armando Castellanos. (2026).
 > Rethinking the movement ecology of Andean bears: temperature-driven cathemerality and seasonal space-use cycles.
 > bioRxiv 2026.05.11.720697
 
