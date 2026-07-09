@@ -1,0 +1,744 @@
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% Activate line below for submission
+%\documentclass[lineno,referee,pdflatex,sn-vancouver-num]{sn-jnl}% Vancouver numbered: matches Movement Ecology's [1,2] bracketed style
+\documentclass[pdflatex,sn-vancouver-num]{sn-jnl}% Vancouver numbered: matches Movement Ecology's [1,2] bracketed style
+
+%%%% Standard Packages
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{mathrsfs}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{array}%
+\usepackage{changepage}% for adjustwidth in wide tables
+
+\newlength\savedwidth
+\newcommand\thickhline{\noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+\hline
+\noalign{\global\arrayrulewidth\savedwidth}}
+
+\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%
+\newtheorem{proposition}[theorem]{Proposition}%
+
+\theoremstyle{thmstyletwo}%
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
+
+\theoremstyle{thmstylethree}%
+\newtheorem{definition}{Definition}%
+
+\raggedbottom
+
+\begin{document}
+
+%%=============================================================%%
+%%  TITLE
+%%=============================================================%%
+\title[Movement ecology of Andean bears]{Rethinking the movement ecology of Andean bears: temperature-driven cathemerality and seasonal space-use cycles}
+
+%%=============================================================%%
+%%  AUTHORS
+%%=============================================================%%
+
+\author*[1,2,3]{\fnm{Francisco X.} \sur{Castellanos}}\email{xacfran@gmail.com}
+
+\author[1]{\fnm{David} \sur{Jackson}}\equalcont{These authors contributed equally to this work.}
+
+\author[4,5,6]{\fnm{Stefano} \sur{Mezzini}}\equalcont{These authors contributed equally to this work.}
+
+\author[1,2]{\fnm{Jorge} \sur{Brito}}
+
+\author*[1,2]{\fnm{Armando} \sur{Castellanos}}\email{iznachi@gmail.com}
+
+\affil[1]{\orgname{Fundaci\'on Oso Andino}, \orgaddress{\city{Quito}, \state{Pichincha}, \country{Ecuador}}}
+
+\affil[2]{\orgname{Instituto Nacional de Biodiversidad}, \orgaddress{\city{Quito}, \state{Pichincha}, \country{Ecuador}}}
+
+\affil[3]{\orgdiv{Department of Biological Sciences}, \orgname{Texas Tech University}, \orgaddress{\city{Lubbock}, \state{Texas}, \country{USA}}}
+
+\affil[4]{\orgname{Poisson Consulting Ltd.}, \orgaddress{\city{Nelson}, \state{British Columbia}, \country{Canada}}}
+
+\affil[5]{\orgdiv{Department of Biology}, \orgname{The University of British Columbia Okanagan}, \orgaddress{\city{Kelowna}, \state{British Columbia}, \country{Canada}}}
+
+\affil[6]{\orgname{Okanagan Institute for Biodiversity, Resilience, and Ecosystem Services, The University of British Columbia Okanagan}, \orgaddress{\city{Kelowna}, \state{British Columbia}, \country{Canada}}}
+
+\abstract{%
+\textbf{Background:} The Andean bear (\textit{Tremarctos ornatus}), South America's only ursid, is one of the world's most elusive large mammals, making movement data collection exceptionally rare. Addressing this gap, we present the largest telemetry dataset ever assembled, spanning 19 individuals tracked across three Ecuadorian National Parks over two decades, paired with a novel analytical approach.
+
+\textbf{Methods:} We integrated Continuous-Time Movement Models (CTMM), Autocorrelated Kernel Density Estimates (AKDEs), Hidden Markov Models (HMM) and a diel niche theoretical framework to mitigate biases previously unaccounted for the species in telemetry studies. Fine-scale AKDEs and non-linear movement metrics were calculated to understand seasonal space use and movement behaviors. Speed and diffusion from CTMM and behavioral states from HMM were modelled with environmental covariates to investigate which conditions shape diel and seasonal activity.
+
+\textbf{Results:} Population mean home range was 138.2 km\textsuperscript{2} (95\% Confidence Intervals 78.7\textendash 225.5), with males (239.8 km\textsuperscript{2}, 182.8\textendash 307.5), significantly exceeding females (58.5\ km\textsuperscript{2}, 35.5\textendash 90.3). Notably, three females exhibited ranges comparable to some males. Weekly and monthly AKDEs uncovered cyclic home range dynamics potentially driven by resource availability, with contractions around corn harvests and berry seasons, and expansions during páramo transitions. Decoupling speed from diffusion rates showed region-specific behaviors: intensive patch exploitation in Llanganates, broad exploratory ranging in Cayambe–Coca, and suppressed female locomotion in Cotacachi–Cayapas. Statistical analyses identified temperature as a key diel modulator and precipitation as the seasonal driver. Foraging probability increased between 2:00\textendash6:00, large displacements between 7:00\textendash14:00, and nocturnal movement rose significantly under colder conditions. Across diel hypothesis frameworks, bears were classified as cathemeral rather than strictly diurnal, corroborated by camera-trap records from Colombia, Ecuador, and Peru.
+
+\textbf{Conclusions:} We propose a cathemeral diel phenotype that responds to thermal fluctuations and situates Andean bears within a broader ursid context of thermoregulatory niche plasticity. This dataset reveals unprecedented resolution of regional and sex specific behaviors that will facilitate and accelerate comparative studies in rapidly changing Andean landscapes. By releasing this long-term dataset as an open resource, we provide a foundation for climate-resilient conservation strategies. More broadly, we advocate for data democratization and invite collaboration.
+}
+
+%%=============================================================%%
+%%  KEYWORDS 3 - 10
+%%=============================================================%%
+\keywords{Autocorrelated Kernel Density Estimate, Andes, Continuous-Time Movement Models, diel niche, diffusion rates, Ecuador, telemetry, \textit{Tremarctos ornatus}}
+
+\maketitle
+
+%%=============================================================%%
+%%  BACKGROUND
+%%=============================================================%%
+\section{Background}
+
+The Andean bear \textit{Tremarctos ornatus} is a large elusive mammal, and the only extant bear species native to South America~\cite{velez-liendoAndeanBearTremarctos2020}. Its distinctive facial markings, often forming spectacle-like shapes, vary from individual to individual and can change through their lifespan~\cite{garshelisFamilyUrsidaeBears2009,garcia-rangelAndeanBearTremarctos2012,velez-liendoAndeanBearTremarctos2020}, inspiring the common name ``spectacled bear''. This species ranges from western Venezuela to Southern Bolivia and a controversial distributional boundary in Argentina~\cite{velez-liendoAndeanBearTremarctos2020,vela-vargasTremarctosOrnatusCarnivora2021}. The species occupies a diverse range of habitats including páramo and Puna high grasslands, subtropical and tropical montane forests, dry forests, and even shrubby coastal deserts~\cite{garcia-rangelAndeanBearTremarctos2012,velez-liendoAndeanBearTremarctos2020}.
+
+In Ecuador, Andean bear populations are concentrated along the Andean mountain belt, between elevations of 700 and 4,900~m.a.s.l.~\cite{velez-liendoAndeanBearTremarctos2020}. Subpopulations exist in both the western and eastern foothills, spanning the Choc\'{o} bioregion and the upper Amazon basin, respectively~\cite{penterianiBearsWorldEcology2020}. Nevertheless, geographical barriers seem to represent no obstacle to gene flow, with studies revealing the existence of a single genetically homogenous population~\cite{ruiz-garciaGeneticsAndeanBear2020,ruiz-garciaEffectsEcuadorianAndes2025}.
+
+Although research on Andean bears lags behind studies of other Ursids, recent work has contributed important insights mostly through noninvasive and incidental sampling, such as: population genetics~\cite{ruiz-garciaGeneticsAndeanBear2020,ruiz-garciaGeneticStructureSpectacled2020,ruiz-garciaMicrosatelliteAnalysisSpectacled2005,ruiz-garciaMolecularPopulationGenetic2003,cuevaEvidencePopulationGenetic2024}, occupancy models via camera trap data~\cite{castrillon-hoyosOccupancyHabitatUse2023,morrellRoadsForestCover2021}, maternal and kinship relations~\cite{castellanosMaternalBehaviorFemale2015,castellanosDoesRebeccaSeasoned2018,castellanosAreReportsCub2019,vasquezSocialBehaviorAndean2024}, human-bear conflict~\cite{castellanosSuggestionsMitigatingCattle2011}, and parasitology~\cite{castellanosRecordCanineDistemper2023,santodomingoNovelGenotypeBabesia2025}.
+Despite the low capture success rate, collar tagging of over 20 specimens has been achieved in Ecuador~\cite{castellanosMamiferosGrandesMedianos2025,castellanosAndeanBearHome2011}, two in Colombia~\cite{rodriguezSpaceUseMale2021,vela-vargasNovelInsightsAndean2021}, two in Bolivia~\cite{paisleyActivityPatternsTime2005} and one in Peru~\cite{pillcohuarcayaEyesAndeanBear2024}. From the collected data, analyses have largely been limited to home range estimation~\cite{castellanosAndeanBearHome2011,rodriguezSpaceUseMale2021,vela-vargasNovelInsightsAndean2021,castellanosAndeanBearCore2013} and used as proxies to understand their behavior. These studies relied on traditional estimators such as Minimum Convex Polygon (MCP), Kernel Density Estimate (KDE), and Local Convex Hull (LoCoH), without accounting for bias sources such as irregular sampling regimes, small effective sample sizes (ESS; i.e., number of home range crossings), and unmodeled autocorrelation in Global Position System (GPS) datasets~\cite{silvaAutocorrelationinformedHomeRange2022,silvaTooFewToo2026,anandEstimatingPopulationRange2025}. Moreover, these methods assume each fixed position is Independent and Identically Distributed (IID), leading to negatively biased estimates when this assumption is violated. Mitigating these biases is particularly relevant as the availability of GPS data increases.
+
+GPS collars enable fine-scale movement and behavioral data collection across temporal resolutions, but their application in Andean bear studies remains limited, largely due to the logistical and economic challenges of capture and collar-tagging, and the technological intricacies caused by GPS tracking in densely forested environments.
+The largest home range study, published more than a decade ago, relied on VHF data~\cite{castellanosAndeanBearHome2011,castellanosAndeanBearCore2013}, and little progress has been made in understanding the movement ecology of the species since then. Only two GPS-based studies in Colombia have been published in the last five years; together, they describe home ranges and core areas for two bears, with straight-line displacements estimated for only one individual~\cite{rodriguezSpaceUseMale2021,vela-vargasNovelInsightsAndean2021}.
+
+Diel activity patterns remain poorly understood. Camera trap and telemetry data from Chingaza Natural National Park in Colombia~\cite{parra-romeroNotEatingAlone2019}, and in the Apolobamba range in Bolivia suggest primarily diurnal movement~\cite{paisleyActivityPatternsTime2005}. However, Peyton B. noted day and night activity in cloud forests through extensive field research~\cite{peytonSpectacledBearConservation}. Similarly, anecdotal reports from Cotacachi-Cayapas National Park, and telemetry studies in the Maquipucuna Biological Reserve in Ecuador~\cite{castellanosEcologiaComportamientoOsos2005} note activity concentrated between 06:00\textendash 18:30 with short rest bouts in the afternoon, and nocturnal movements likely driven by low temperatures and high precipitation rates (Castellanos A. pers. comm.).
+
+Critical knowledge gaps persist in fine-scale movement patterns and diel behaviors, which are essential for understanding diel niche partitioning, environmental drivers of movement, and individual variation within and between populations. This scenario calls for updated, robust, and comprehensive studies utilizing modern telemetry, computational technologies, alongside modelling techniques designed to mitigate bias sources~\cite{silvaAutocorrelationinformedHomeRange2022}.
+
+After 20 years of intensive field work, tracking, and data collection, we present the largest telemetry dataset of an Andean bear population across three regions of the Ecuadorian Andes. Using high resolution GPS data from nine Andean bears inhabiting high elevation grasslands, and reevaluating VHF data from ten individuals~\cite{castellanosAndeanBearHome2011}, we applied novel computational and statistical methods to estimate population-level home range and core area sizes, non-linear movement metrics, and infer environmentally-driven behavioral responses. The availability of these new tracking units enables an unbiased examination of diel and seasonal dynamics under a robust framework that incorporates environmental data to evaluate drivers of movement and behavioral change. This work provides a novel, data-rich framework for assessing movement ecology in this emblematic Neotropical species, highlights the importance of democratizing data, and contributes to informed conservation planning while advocating for open ecological data to support collective research efforts.
+By releasing this dataset, we enable cross-country comparisons and collaborative conservation planning, demonstrating how democratizing long-term ecological data can accelerate both scientific progress and conservation outcomes.
+
+%%=============================================================%%
+%%  METHODS
+%%=============================================================%%
+\section{Methods}
+
+\subsection{Study areas}
+
+\subsubsection{Cotacachi-Cayapas National Park}
+
+This northernmost National Park (NP) covers 2,436.38~km\textsuperscript{2} across the provinces of Esmeraldas and Imbabura~\cite{ministeriodelambientePlanManejoReserva2007}. Elevations range from 30 to 4,939~m.a.s.l.~\cite{ministeriodelambientePlanManejoReserva2007}.
+Its western slopes fall within the Choc\'{o} ecoregion\textemdash one of the planet's ten most important biological hotspots~\cite{myersBiodiversityHotspotsConservation2000}. Three vegetation zones are present from lowest to highest: cloud forest, high montane forest and páramo.
+Above 2,000~m.a.s.l., \textit{Cecropia} is common, along with Lauraceae species such as \textit{Nectandra} and \textit{Ocotea}~\cite{castellanosGuiaParaRehabilitacion2010}.
+In cloud forests, bears obtain protein and fiber from \textit{Chusquea}, a bamboo-like species which makes up 75\% of their daily diet~\cite{castellanosGuiaParaRehabilitacion2010}. In the páramo, Andean blueberries locally known as morti\~{n}o (\textit{Vaccinium floribundum}) are an essential seasonal fruit in the diet of the Andean bear.
+Fructification occurs in two peaks: the highest from September to December and a secondary from January to April (Efrain Freire pers. comm.). The park experiences two climate types: Equatorial high mountain and Equatorial mesothermic semi-humid, with average annual temperatures fluctuating between 12{\textdegree}C and 18{\textdegree}C~\cite{ministeriodelambientePlanManejoReserva2007,hijmansVeryHighResolution2005}.
+Rainfall is concentrated between October and May, followed by a dry season from June to September~\cite{hijmansVeryHighResolution2005}. Human activities, particularly maize production in Intag, drive conflict between bears and farmers~\cite{castellanosGuiaParaRehabilitacion2010}.
+Burning, overgrazing, and illegal mining have also fragmented and reduced \textit{Polylepis} forests~\cite{ministeriodelambientePlanManejoReserva2007}.
+
+\subsubsection{Cayambe-Coca National Park}
+
+It encompasses an area of 4,083~km\textsuperscript{2}, with altitudinal gradients from 600 to 5,790 m.a.s.l., and spans the provinces of Pichincha, Imbabura, Napo and Sucumb\'{i}os~\cite{ministeriodelambientePlanManejoParque2020}.
+The NP includes both the Andean and Amazon regions, with vegetation ranging from high montane forest to páramo~\cite{sierraPropuestaPreliminarSistema1999}, and two zoogeographic floors: temperate and high Andean~\cite{albujaFaunaVertebradosEcuador2012}.
+It has a delimited rainy season from June to August, dry from September to January, and intermittent rains during the rest of the year~\cite{hijmansVeryHighResolution2005,varelaGeografiaClimaEcuador2018}.
+The climate is classified as Equatorial mesothermal and semihumid~\cite{hijmansVeryHighResolution2005,varelaGeografiaClimaEcuador2018}. Mean temperatures vary with elevation but average around 8{\textdegree}C, with maximum temperatures rarely exceeding 20{\textdegree}C and minimums often approaching 0{\textdegree}C~\cite{ministeriodelambientePlanManejoParque2020}.
+The park's highlands form a vital hydrological reservoir, including several wetland systems designated as the \~{N}ucanchi Turupamba Ramsar site~\cite{ministeriodelambientePlanManejoParque2020}, one of the 19 Ramsar sites present in Ecuador. These wetlands are critical for biodiversity, water provision and climate change mitigation~\cite{ministeriodelambientePlanManejoParque2020}.
+The NP hosts over 100 endemic plant species, and páramo remnants of \textit{Polylepis} forests serve as refuge for Andean wildlife~\cite{ministeriodelambientePlanManejoParque2020}. Several species of bromeliads like ``achupallas'' (\textit{Puya} spp., \textit{Greigia} spp.) constitute a key component of Andean bear diet, as they heavily feed on their meristematic tissues and leaf bases.
+These plants are scattered throughout the páramo in patches and are abundant year-round~\cite{troyaFoodHabitsAndean2004}. Additionally, berries of the genus \textit{Rubus}, \textit{Escallonia myrtilloides}, and \textit{Pernettya prostrata} are available during the rainy season~\cite{troyaFoodHabitsAndean2004}.
+However, because extensive cattle ranching overlaps with the natural habitat of bears, conflict with humans is common within the Kichwa indigenous community of Oyacachi, primarily due to cattle predation~\cite{floresvelascoEnvironmentalEducationTool2004}.
+
+\subsubsection{Llanganates National Park}
+
+The southernmost study site covers 2,197~km\textsuperscript{2}, extending from the Andean to the Amazon region in the provinces of Cotopaxi, Tungurahua, Napo and Pastaza~\cite{ministeriodelambientePlanManejoParque2013}. Within the park is the Llanganati Complex considered a Ramsar site~\cite{ministeriodelambientePlanManejoParque2013}. The NP is found in the province of Tungurahua, within the temperate zoogeographic floor~\cite{albujaFaunaVertebradosEcuador2012}, where altitudes range from 1,200 to 4,570~m.a.s.l.~\cite{ministeriodelambientePlanManejoParque2013}. The prevailing climates are Equatorial high montane and mesothermic semi humid with annual average temperatures that fluctuate between 12{\textdegree}C and 22{\textdegree}C. Vegetation zones include cloud forest, high montane forest and páramo~\cite{sierraPropuestaPreliminarSistema1999}. Rainfall is strongly seasonal, with a rainy period from June to August, a dry season from September to January and intermittent rains during the rest of the year~\cite{institutonacionaldemeteorologiaehidrologiaAnuarioMeteorologico20132017}. Over 800 vascular plant species have been identified throughout the park~\cite{ministeriodelambientePlanManejoParque2013}. In the páramo, berries and achupallas are available with seasonal resemblance to the Cotacachi-Cayapas NP (Efrain Freire pers.\ comm.).
+Agricultural and livestock activities in cloud forest areas have caused habitat fragmentation. Maize is the primary crop harvested from January to May, and frequent bear incursions into these fields have led to conflict with local farmers (Edgar Mart\'{i}nez pers. comm.).
+
+\subsection{Capture and GPS collar tagging}
+
+Over a 9-year period, we captured and tagged 3 males and 6 females in the Cayambe-Coca and Llanganates NPs, representing different life stages (subadult, adult, and long-lived; Figure~\ref{fig1}, Table~\ref{table1}).
+
+%% FIGURE 1
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Figure1_v8.png}
+  \caption{\textbf{Telemetry study sites of Andean bears in Ecuador.}
+    Topographic map overlaid with land cover data from MapBiomas Ecuador (2023~\cite{proyectomapbiomasecuadorColeccion20Serie2023}). Study sites where VHF and GPS data was generated are shown with a circle or diamonds, respectively. Zoomed-in maps show 95\% AKDEs of bears tracked in each region with a grey continuous line. Elevation contours are shown with dashed lines and were generated in ArcGis Pro with Digital Elevation Model data downloaded with the elevatr R package v0.99.0~\cite{hollisterElevatrAccessElevation2023}. Major cities and important localities to this work are shown with a white circle whereas the stars show approximate capture localities. Sex-based population average home range (HR) is shown with each bear.}
+  \label{fig1}
+\end{figure}
+
+%% TABLE 1
+\begin{table}[t]
+  \caption{\textbf{Animal fix data.} Andean bears tracked with VHF and GPS collars in three National Parks: Cayambe-Coca (CCNP), Llanganates (LLNP), and Cotacachi-Cayapas (CCYNP). Individuals from CCYNP were marked with VHF collars~\cite{castellanosAndeanBearHome2011}.}
+\label{table1}
+  \small\setlength{\tabcolsep}{4pt}%
+  \begin{tabular}{|l|l|l|r|l|r|l|}
+    \hline
+    \textbf{Name} & \textbf{Sex} & \textbf{Life stage} & \textbf{Fixes} & \textbf{Tracking period} & \textbf{\# months} & \textbf{Region} \\ \thickhline
+    Chalpar   & male   & subadult              & 7,622 & Aug 2019 -- May 2022  & 34.2 & CCNP      \\ \hline
+    Daniela   & female & adult                 & 3,960 & Oct 2019 -- Sep 2020  & 11.7 & CCNP      \\ \hline
+    Matias    & male   & adult                 & 3,219 & Apr 2018 -- Dec 2020  & 33.1 & CCNP      \\ \hline
+    Paya      & female & adult                 &   819 & Jun 2017 -- Jan 2018  &  7.8 & CCNP      \\ \hline
+    Rebecca   & female & adult                 &   887 & Sep 2015 -- Mar 2016  &  6.8 & CCNP      \\ \hline
+    Alejandra & female & subadult              & 5,047 & May 2021 -- Sep 2022  & 16.5 & LLNP                  \\ \hline
+    Armando   & male   & subadult              & 1,915 & Mar 2023 -- Dec 2023  &  9.7 & LLNP                  \\ \hline
+    DeeAnn    & female & long-lived &   527 & Mar 2022 -- Aug 2022  &  5.5 & LLNP                  \\ \hline
+    Lorena    & female & subadult              & 2,395 & Dec 2022 -- Sep 2023  &  8.7 & LLNP                  \\ \hline
+    Amanda    & female & adult                 &   200 & May 2003 -- Mar 2005  & 22.4 & CCYNP \\ \hline
+    Carolina  & female & subadult              &   178 & Dec 2007 -- May 2009  & 16.6 & CCYNP \\ \hline
+    Dolores   & female & adult                 &   330 & Oct 2002 -- Jan 2005  & 27.7 & CCYNP \\ \hline
+    Ezequiel  & male   & adult                 &   101 & Mar 2003 -- Oct 2003  &  6.3 & CCYNP \\ \hline
+    Fernando  & male   & adult                 &    42 & Jan 2008 -- Dec 2009  & 23.0 & CCYNP \\ \hline
+    Jaime     & male   & adult                 &   136 & Mar 2004 -- Dec 2005  & 21.6 & CCYNP \\ \hline
+    Gilo      & male   & adult                 &   130 & Jan 2008 -- Dec 2009  & 23.5 & CCYNP \\ \hline
+    Marjorie  & female & adult                 &   249 & Oct 2000 -- Jul 2003  & 32.7 & CCYNP \\ \hline
+    Pancho    & male   & subadult              &   133 & May 2003 -- Jun 2004  & 12.7 & CCYNP \\ \hline
+    Porraca   & female & subadult              &   513 & Jan 2002 -- Dec 2005  & 47.4 & CCYNP \\ \hline
+  \end{tabular}
+\end{table}
+
+Capture methods included Iznachi box traps, snare traps, and pursuit with trained dogs~\cite{castellanosAndeanBearHome2011,mcdonaldMethodsCapturingFreeRanging2003,allenResearchManagementImplications1985,castellanosMamiferosGrandesMedianos2025}. Once captured, individuals were sedated via dart injection using an airsoft rifle (Daninject, USA). The immobilization mixture consisted of xylazine hydrochloride (0.3\textendash 2~mg/kg; Equiet, ERMA Labs, Cundinamarca, Colombia) and ketamine (3\textendash 8~mg/kg; Ket-A-100, Grupo Grandes, Quito, Ecuador~\cite{castellanosAndeanBearHome2011}).
+Following immobilization, the bears were positioned in lateral decubitus, measured, assessed for health status, sampled for hair and blood, and fitted with an Iridium/GPS Vertex Lite collar (Vectronic Aerospace GmbH, Berlin, Germany). GPS collars were programmed to record positions every two hours (12 fixes per day), until they detach naturally or were remotely released using a drop-off mechanism.
+When necessary, supplementary doses of ketamine hydrochloride (1\textendash 2 mg/kg intramuscular) were administered to maintain anesthesia until collar deployment was complete. Individuals were subsequently revived using the reversal agent yohimbine hydrochloride (0.1\textendash 0.25 mg/kg; Yohimbine Vet, Holliday-Scott S.A., Buenos Aires, Argentina~\cite{castellanosHematologicalSerumBiochemical2010}). Post procedure, proximity was maintained to confirm full recovery and good health.
+
+\subsection{Data processing and movement modeling}
+
+We analyzed movement data from nine GPS-tagged, and reanalyzed fifteen VHF-tagged individuals (Table~\ref{table1},~\cite{castellanosAndeanBearHome2011}). For VHF data, a fixed 81 m triangulation error was applied~\cite{castellanosAndeanBearHome2011}. GPS location errors were quantified using calibration data and the root-mean-square user equivalent range error~\cite{flemingComprehensiveFrameworkHandling2020} in the R package \texttt{ctmm} v1.2.0~\cite{calabreseCtmmPackageAnalyzing2016}. Based on delta corrected Akaike Information Criteria ($\Delta$AICc), individual-specific error models were selected over population-level models (\hyperref[S1_File]{Additional file~1}), revealing a horizontal error range of 1\textendash 32 m, and vertical of 2\textendash 348 m (\hyperref[S1_File]{Additional file~2; Table S1}).
+
+Data was screened for unrealistic fixes by keeping those within the 2,000\textendash 5,000 m.a.s.l.\ altitudinal range and identifying minimum step-averaged speed outliers, typically marked as such if $\geq$0.4~m/s.
+These curated datasets, comprising 26,391 GPS and 2,012 VHF fixes, are available in the Movebank Data Repository~\cite{castellanosDataDawnDens2026}. Calibration data are not included because they were collected on private properties.
+However, R Data Serialization (RDS) objects containing the error models are available at \url{https://github.com/Xacfran/andean_bears}.
+
+Range residency was assessed by fitting semi-variance functions and inspecting variograms~\cite{flemingFineScaleForagingHome2014}. All GPS-collared bears exhibited range-resident behavior roughly after 3 months (\hyperref[S3_File]{Additional file 3, Fig. S1}), whereas five VHF-tagged bears were excluded due to non-residency. Finally, we fit Continuous Time Movement Models (CTMM) by selecting the best-fit model for each individual via AICc. Models were fit to both the full datasets and the subsetted diurnal/nocturnal periods to account for diel variation. For details on error model selection, CTMMs and parameter estimates, see \hyperref[S1_File]{Additional file~1} and \hyperref[S2_File]{Additional file~2 (Table S2)}.
+
+\subsection{Home ranges and social interactions}
+
+We used the range distribution home range concept to underpin the possible future space use of the bears~\cite{alstonClarifyingSpaceUse2022}. We hereafter use the terms ``home range'' as 95\% of the utilization distribution (UD), ``core area'' as 50\% of the UD, and ``areas'' to refer to both. To account for autocorrelation, small ESS, and irregular sampling, we used the optimally weighted area-corrected Autocorrelated Kernel Density Estimate ($wAKDE_{c}$~\cite{flemingCorrectingMissingIrregular2018,flemingOvercomingChallengeSmall2019}), hereafter ``AKDE'', within \texttt{ctmm}. A key advantage of this framework was the ability to perform population-level inference; we estimated population mean AKDEs per region, sex, and life stage using a $\chi$\textsuperscript{2} inverse Gaussian meta-analysis~\cite{flemingPopulationlevelInferenceHomerange2021}.
+
+We visualized that large portions of UDs were shared by sympatric individuals. Given that direct observations of Andean bears have shed light on the interplay of complex social and hierarchical behaviors~\cite{parra-romeroNotEatingAlone2019,vasquezSocialBehaviorAndean2024}, we examined potential social interplay by measuring home range overlap with the Bhattacharyya coefficient (BC) and estimated the probability of long-term encounters through the Conditional Distribution of Encounters (CDE~\cite{noonanEstimatingEncounterLocation2021}).
+
+Hitherto, a temporal fine-scale understanding of bears' home ranges has been unexplored in this species. To capture temporal variations, we estimated weekly AKDEs for GPS data using a lag bin width $dt = 1$ day (i.e., step size every 1 day), and monthly AKDEs for VHF data ($dt = 7$ days) with the \texttt{window\_hr} R script~\cite{mezziniHowResourceAbundance2025}. Importantly, weekly and monthly AKDE estimates reflect area shift intensity rather than home range values because AKDE estimations rely on stationarity assumptions; hence, large displacements within subsampled periods result in area overestimation.
+
+For both datasets, we incorporated high-resolution satellite imagery using the \texttt{basemaps} v0.0.7 R package~\cite{SchwalbJakobbasemaps} to visually analyze, and describe individual behaviors across windows and regions. This detailed analysis is found in \hyperref[S1_File]{Additional file~1}, and the animated movements at the Zenodo repository~\cite{zenodoMovementsBears}.
+
+\subsection{Behavioral states and diel niche analysis}
+
+We inferred behavioral states from GPS tracking data using Hidden Markov Models (HMM) to characterize movement persistence, activity budgets, and diel variation in relation to temperature and precipitation as independent variables.
+GPS points were annotated via the Environmental Data Automated Track Annotation System (Env-DATA~\cite{dodgeEnvironmentaldataAutomatedTrack2013}) with a bilinear interpolation, incorporating ERA5 2 m air temperature~\cite{Hersbach2023ERA5temperature}, and total precipitation~\cite{MunozSabater2019ERA5precipitation}. Likewise, elevation was annotated from the Shuttle Radar Topography Mission at 1 arc-second, roughly 30 m (\url{https://dwtkns.com/srtm30m/}).
+
+Because HMMs require regular sampling, we filtered GPS datasets into tracks representing at least 2 days of continuous locations with a maximum 9-hour gap and predicted missing positions with ctmm (11.8\% of the final dataset; \hyperref[S1_File]{Additional file~2, Table S3}). We used the R package \texttt{momentuHMM} v1.5.5~\cite{mcclintockMomentuHMMPackageGeneralized2018} to infer three a priori behavioral states: encamped, exploratory, and travelling (i.e., long displacements). None of the required initial model parameters exist for this species, thus, we iterated through 200 randomized parameter sets and selected the best-fit model with valid pseudo-residuals. Transition probabilities were modeled using weather covariates and cyclical time functions from the psych v2.4.6 package~\cite{revellePsychProceduresPsychological2007}. Diel cycles were best supported by temperature, while seasonal transitions were driven by precipitation. Detailed description of this process is provided in \hyperref[S1_File]{Additional file~1}.
+
+Mammalian diel research traditionally assigns species into single diel niches as fixed behaviors. In some ursids, however, evidence shows they display extreme diel plasticity based on sex, age~\cite{kawamuraDielMonthlyActivity2022}, seasonality~\cite{lewisActivityPatternsBlack2011}, and anthropogenic factors~\cite{lewisActivityPatternsBlack2011,kawamuraDielMonthlyActivity2022,donatelliCircadianActivitySmall2022}. We investigated diel plasticity at a weekly-scale using the \texttt{Diel.Niche} v0.0.1.0 R package~\cite{gerberModelbasedHypothesisFramework2024}, which uses Bayesian model selection via Bayes factors to compare alternative categorical diel phenotypes. Weekly units were formed for each combination of individual, behavioral state, sex, and region, retaining $n \geq 20$ GPS fixes per diel period category, yielding 426 weekly units across 7 individuals.
+Activity phenotypes were classified under three progressively more restrictive hypothesis frameworks: Traditional, General, and Selection to estimate phenotype probabilities across periods. See \hyperref[S1_File]{Additional file~1} for more details.
+
+\subsection{Speeds and diffusion rates}
+
+Traditional calculations of linear speeds and distances are scale-sensitive and biologically inaccurate as they tend to produce estimates biased by sampling frequency and measurement error~\cite{noonanScaleinsensitiveEstimationSpeed2019}. Therefore, we calculated scale-insensitive continuous-time speeds and distances (CTSD~\cite{noonanScaleinsensitiveEstimationSpeed2019}). Whole-tracking-period and diel speed estimates were restricted to GPS-tagged individuals, where sampling resolution was sufficient to resolve velocity autocorrelation, and yielded average speeds for seasonal inferences, and instantaneous speeds from diurnal and nocturnal subsets for a higher-resolution diel analysis.
+
+\subsubsection{Fine-scale movement estimates}
+
+Because our sampling intervals exceeded velocity autocorrelation timescales, movement metrics at a daily temporal scale were rendered unreliable. Hence, we estimated monthly diffusion rates and average speeds for both GPS and VHF-tagged bears, as the coarser positional autocorrelation timescales governing diffusion are compatible with the sampling resolution of both tag types~\cite{denicolaAreYourData2025}.
+Diffusion, defined as the displacement variance over a finite period of time, integrates both movement rate and directional persistence, and therefore reflects broader-scale processes such as behavioral state switching, site fidelity, and exploratory phases~\cite{denicolaAreYourData2025}.
+
+We estimated weekly average speeds and diffusion rates using a sliding 4-week window and $dt = 1$ week by modifying the \texttt{windows\_hr} script~\cite{mezziniHowResourceAbundance2025}. CTMMs were fitted and selected for each window and diffusion rates were extracted from the model summary. Quality filtering retained only windows where diffusion degrees of freedom (DOF) $\geq 5$, excluding infinite confidence intervals (CI), and removing IID models.
+
+\subsubsection{Statistical tests}
+
+Population-level statistical comparisons across diel periods, sexes, ages, and regions were performed using meta-analyses in \texttt{ctmm}. Additionally, non-parametric tests to assess regional, sex, and diel differences in instantaneous speeds were performed via \texttt{ggstatsplot} v0.13.1~\cite{patilVisualizationsStatisticalDetails2021}: Mann-Whitney and Kruskal-Wallis. Effect sizes are reported as rank-biserial correlations ($\widehat{r}^{\,}$).
+
+Region-specific seasonal patterns in weekly speed and diffusion were modeled using Generalized Additive Models (GAM) in the \texttt{mgcv} R package~\cite{woodGeneralizedAdditiveModels} using REML smoothness selection. Each model included a sex and region interaction, a cyclic cubic spline for population-level and region-specific seasonality, and an individual-level random intercept.
+
+Furthermore, to investigate the specific environmental conditions under which nocturnal movements were triggered, we tested the synergistic influence of temperature, precipitation, elevation, time of day, and seasonality on instantaneous speeds, by applying Hierarchical GAMs (HGAMs~\cite{pedersenHierarchicalGeneralizedAdditive2019}). We used the \texttt{bam} function in \texttt{mgcv}, and specified a Gamma distribution with a log link, using the fREML method for efficient parameter estimation~\cite{woodGeneralizedAdditiveModels2015,woodGeneralizedAdditiveModels2017}. The model incorporated cyclic cubic splines for diel and annual cycles and tensor product interactions to capture the joint covariate effects, and a correction for individual sampling interval bias. We accounted for individual variability using random intercepts and included sex as a fixed effect~\cite{pedersenHierarchicalGeneralizedAdditive2019}.
+
+Model fit was assessed using deviance residuals. Residual-versus-linear-predictor plots showed structure consistent with the Gamma mean–variance relationship not fully capturing the spread of extreme instantaneous speeds, and the deviance residuals were right-skewed with a heavy upper tail (\hyperref[S3_File]{Additional file 3, Fig. S2}). To ensure that this did not compromise our results, we evaluated the fitted conditional means directly through predictive checks, comparing predicted and observed speeds at the individual level. Even though the model under-predicted the fastest instantaneous speeds, it fully captured the overall distribution of speeds and the behavioral patterns present in the real data (\hyperref[S3_File]{Additional file 3, Fig. S2}).
+
+%%=============================================================%%
+%%  RESULTS
+%%=============================================================%%
+
+\section{Results}
+
+\subsection{Regional and sex-based area estimates}
+
+The population home range mean was 138.21 km\textsuperscript{2} (95\% CI: 78.67\textendash 225.5). Males areas were significantly larger than those of females ($p < 0.001$). However, UD estimates revealed substantial individual variation. The females Porraca, Daniela and Alejandra had similar home ranges than Fernando and Ezequiel, and core areas similar to Jaime, Fernando, Matias and Ezequiel. For the remaining females, home ranges spanned from 20.4\textendash 90.3 km\textsuperscript{2}, and core areas 3.3\textendash 18.8 km\textsuperscript{2}, with the smallest values corresponding to Lorena and Rebecca, respectively (Fig.~\ref{fig2}, \hyperref[S2_File]{Additional file~2, Table S4 and S5}).
+
+For males, the home range of Armando from Llanganates was the largest (299 km\textsuperscript{2}), followed by Matias in Cayambe-Coca (255.3 km\textsuperscript{2}), and an average of 211.12 km\textsuperscript{2} across four males in Cotacachi-Cayapas. In contrast, females exhibited the opposite trend (Fig.~\ref{fig2}; \hyperref[S2_File]{Additional file~2, Table S6}).
+
+%% FIGURE 2
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Figure2_v5.pdf}
+  \caption{\textbf{Home range and core area AKDE estimates of Andean bears in three Ecuadorian National Parks.}
+    Forest plots display individual and population-level averages and confidence intervals. Males are marked with a circle, females with a triangle and the population mean is shown with a blue dashed line. Population-level analyses and statistical significant testing were performed using a $\chi$\textsuperscript{2} inverse Gaussian meta-analysis. The vector was generated by FXC from an illustration by Daniel Torres.}
+  \label{fig2}
+\end{figure}
+
+Regionally, the overall bear population showed no significant differences in home range sizes, nor did we find statistical differences between life stages ($p > 0.05$). Within sexes, significant differences were detected between the core areas of females from Cayambe-Coca (8.5 km\textsuperscript{2}) and Llanganates (11.5 km\textsuperscript{2}; p = 0.015), as well as between males from the same regions (52.64 km\textsuperscript{2} vs 82.19 km\textsuperscript{2}) with p = 0.023 (Fig.~\ref{fig2}; \hyperref[S2_File]{Additional file~2, table S6}).
+
+\subsubsection{Fine-scale home ranges}
+
+Seven- and thirty-day home range estimates revealed marked variation in movement strategies across individual Andean bears tied to sex, geography, and seasonal resource availability (\hyperref[S3_File]{Additional file 3, Fig.~S3}).
+During the dry season, between the months of January and May, bears within Llanganates occupied highly localized areas (Fig.~\ref{fig3}), coinciding with the availability of corn (\textit{Zea mays}) and corroborated by frequent visual records of bears near croplands (\hyperref[S3_File]{Additional file 3, Fig.~S4}). In contrast, bears
+in Cayambe-Coca displaced across expansive areas during the same period, suggesting divergent seasonal responses between landscapes
+(Fig.~\ref{fig3}). Rainfall onset dramatically influenced space use. From late June to early October, Cayambe-Coca bears showed predominantly stationary behaviors with restricted ranges, punctuated by brief and intermittent excursions. In Llanganates, movement patterns reversed midyear; bears gradually expanded their home ranges and displayed fewer stationary periods through the second half of the year (Fig.~\ref{fig3}).
+
+%% FIGURE 3
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Figure3_v3.png}
+  \caption{\textbf{Daily, weekly, and monthly home range sizes.}
+    Heatmaps show aggregated counts of the most predominant home range size intervals in each day of the week per month color coded and described in the legend. Stacked areas accompany each heatmap displaying the relative contribution of each day of the week to the total events.}
+  \label{fig3}
+\end{figure}
+
+Male bears in Cayambe-Coca exhibited large and persistent displacements ($>$50 km\textsuperscript{2}), while following defined routes that encompass multiple lakes and prominent geographic features (\hyperref[S1_File]{Additional file~1}), similar to Armando in Llanganates. Notwithstanding, males in Cayambe-Coca exhibited more constrained movements than in other regions, and appeared to remain relatively stationary, from May to September, rather than travelling across their habitat (\hyperref[S1_File]{Additional file~1}, \hyperref[S3_File]{Additional file 3, Fig.~S3}). Remarkably, Chalpar remained in a 3\textendash 21 km\textsuperscript{2} area at an altitude of 4,000 m.a.s.l. from September\textendash October, close to the top of the inactive Cayambe volcano (\hyperref[S1_File]{Additional file~1}).
+
+Female movement patterns in all regions were more localized. For example, Rebecca and Paya exhibited high site fidelity (\hyperref[S1_File]{Additional file~1}), reflecting a combination of habitat specialization and avoidance of human related risks near high traffic infrastructure. Similarly, in the Llanganates NP, DeeAnn and Lorena exhibited highly stable and compact home ranges (\hyperref[S1_File]{Additional file~1}). Both individuals exhibited patterns of short distance displacements followed by extended stationary periods, likely driven by site-specific resource availability and habitat preferences.
+
+Nevertheless, this was not the rule for the females. In Cayambe-Coca, multiple females demonstrated large-scale displacements with peaks ($>$50 km\textsuperscript{2}) during March\textendash June, and pronounced movement plasticity. Daniela, for example, expanded her range dramatically during seasonal pulses before contracting to microhabitats as small as 0.35 km\textsuperscript{2} for brief durations (\hyperref[S1_File]{Additional file~1}; \hyperref[S3_File]{Additional file 3, Fig.~S5}).
+
+In Cotacachi-Cayapas, large displacements were prevalent through April\textendash June and mostly attributed to Carolina's dispersal behavior (\hyperref[S3_File]{Additional file 3, Fig.~S5}). This oscillation between long distance movements and localized residency suggests a complex spatial strategy possibly linked to reproductive or foraging behavior. Together, these seasonal shifts reveal flexible movement strategies that respond to resource availability and landscape context. Detailed bear-by-bear movement profiles are presented in \hyperref[S1_File]{Additional file~1}.
+
+\subsubsection{Home range overlaps}
+
+Overlap estimates highlighted differences in shared space use between regions. In Llanganates, Armando and Alejandra exhibited the highest home range overlap (median BC = 0.78), followed by DeeAnn and Armando (0.64), and DeeAnn and Alejandra (0.54), indicative of shared resource zones. The CDE was located close to the center of Armando's home range with a total area of 71.31 km\textsuperscript{2} (95\% CIs: 42.28\textendash 107.79; Fig.~\ref{fig4}).
+
+In Cayambe-Coca, overlaps were mostly lower than 0.15, suggesting strong spatial segregation. Matias and Daniela showed moderate overlap (0.38), consistent with their synchronous tracking periods. Matias and Paya overlapped 0.37 of their respective home ranges (Fig.~\ref{fig4}; \hyperref[S1_File]{Additional file~1}). The CDE area was 94.91 km\textsuperscript{2} (67.11\textendash 127.44), and centered on Matias' home range, mostly encompassing the UDs of Paya, Rebecca, and the northwestern portion of Daniela's (Fig.~\ref{fig4}).
+
+%% FIGURE 4
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Figure4_v3.pdf}
+  \caption{\textbf{Home range overlap and Conditional Distribution of Encounters (CDE) across three Ecuadorian National Parks.}
+  Individual 95\% AKDEs are overlaid on landcover and elevation data for: Cotacachi-Cayapas (A), Cayambe-Coca (B), and Llanganates (C). Purple polygons delineate the 95\% CDE contours and the shaded raster represents the probability density function of the CDE. Roads and elevation contours are displayed with solid and dashed grey lines, respectively. (D) Pairwise separation distances in synchronously tracked individuals over time. Grey shaded areas indicate the 95\% CIs.}
+  \label{fig4}
+\end{figure}
+
+A markedly different pattern emerged in Cotacachi-Cayapas, where all individuals UDs overlapped\textemdash except for Fernando's\textemdash with a CDE measuring 81.13 km\textsuperscript{2} (65.11\textendash 98.88; Fig.~\ref{fig4}). Notably, overlaps between and within sexes were substantial ($>$0.5; \hyperref[S2_File]{Additional file~2, Table S7}), some as large as 0.82 in the case of Porraca and Pancho. Values lower than 0.5 are described in \hyperref[S1_File]{Additional file~1}.
+
+\subsection{Quite diurnal, quite nocturnal}
+
+\subsubsection{Behavioral states}
+
+Behavioral state inference revealed the step lengths in the encamped state were 35.1 m (95\% CI: 30.74\textendash 39.45), 180.02 m (161.74\textendash 198.3) during foraging, and 607.83 m (558.17\textendash 657.51) while travelling (\hyperref[S1_File]{Additional file~2, Table S8}; \hyperref[S3_File]{Additional file 3, Fig.~S5}). Movement persistence was evident at the population-level in the travelling state, with males displaying more consistent directional movement at the individual level, except for Rebecca, whose movements were ballistics similar to males (\hyperref[S3_File]{Additional file 3, Fig.~S5}). On average, GPS\textendash collared individuals spent approximately 32\% of their sampling period encamped, 44\% foraging, and 23\% travelling long distances  (\hyperref[S1_File]{Additional file~2, Table S8}).
+
+%% FIGURE 5
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Figure5_v2.png}
+  \caption{\textbf{Stationary probabilities derived from a three-state Hidden Markov Model.}
+    The curved lines depict the estimated probability of the bears occupying each behavioral state as a function of day (A), temperature (B), day of the year (C), and precipitation (D) along with the 95\% confidence intervals in shades. The inclusion of temperature and seasonal effects reflects the structure of the top-ranked model ($\Delta$AIC-selected).}
+  \label{fig5}
+\end{figure}
+
+These states exhibited strong cyclical variation, capturing temperature as a critical diel behavioral modulator (Fig.~\ref{fig5}A). Rising temperatures were positively associated with foraging and negatively with travel (Fig.~\ref{fig5}B). Foraging stationary probabilities peaked at approximately 70\% between 2:00 and 6:00. After 8:00, the probability of transitioning to travelling increased to roughly 60\% and declined after 14:00. By 17:00, bears were more likely to transition into a prolonged encamped state, which waned after midnight as foraging resumed. In contrast, modeling the encamped state was statistically constrained; the extremely low transition probabilities from this state to others when the time covariate was fixed at noon (\hyperref[S3_File]{Additional file 3, Fig.~S5}), precluded a reliable estimation of stationary probabilities for this behavior.
+
+On the other hand, precipitation acted as a primary driver of seasonal behavioral transitions (Fig.~\ref{fig5}C). The encamped state reached its maximum probability during the transition from late to early\textendash year (October\textendash January), suggesting a period of increased stationarity. Conversely, both foraging and large displacement probabilities peaked during sporadic rain and wet seasons (May\textendash July), coinciding with a decrease in encamped behavior probabilities at 40\%. The encamped state probabilities had a marked increase at higher rainfall levels as foraging and travelling decreased (Fig.~\ref{fig5}D).
+
+\subsubsection{Diel phenotypes}
+
+Hidden behind the traditional labels of diurnal or nocturnal, Andean bears exhibited a distinctly cathemeral activity cycle, as classified under the Traditional hypothesis, at the individual and population levels across behavioral states, sexes and regions (Fig.~\ref{fig6}; \hyperref[S1_File]{Additional file~2, Table S9}; \hyperref[S3_File]{Additional file 3, Fig.~S6\textendash S8}).
+
+Males and females were uniformly cathemeral, although Matias returned two Diurnal classifications (\hyperref[S2_File]{Additional file~2, Table S9}). When averaged across individuals, both Cayambe–Coca and Llanganates showed exclusive cathemeral classification, with no region showing diurnal preference (\hyperref[S3_File]{Additional file 3, Fig. S7}).
+
+%% FIGURE 6
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Fig6_v3.pdf}
+  \caption{\textbf{Diel phenotype weekly classifications under the Traditional hypothesis and their posterior probabilities across seasons and behavioral states.}
+    Left panels show the proportion of weekly units at the population-level classified as Nocturnal (purple), Cathemeral (gray), or Diurnal (orange). Right panels show posterior median probabilities of female activity in each diel period: nighttime (purple), twilight (gray) and daytime (orange), with dark to light shaded 95\% and 50\% credible intervals derived from Bayesian Markov Chain Monte Carlo sampling on the Diel.Niche activity distributions. Male patterns exhibit similar seasonal variation and equivalent posterior probabilities, see \hyperref[S3_File]{Additional file 3, Figs. S6\textendash S9}.}
+\label{fig6}
+\end{figure}
+
+Posterior median probabilities validated the phenotype classifications (Fig.~\ref{fig6}; \hyperref[S3_File]{Additional file 3, Fig.~S9\textendash S10}). Across behavioral states, sexes and regions, daytime and nighttime activity were both substantial while twilight activity remained the smallest component (posterior mean: $p_{\text{tw}} \approx 0.10-0.20$; Fig.~\ref{fig6}; \hyperref[S3_File]{Additional file 3, Figs.~S8}).
+Because neither the daytime nor the nighttime probability approached the 0.80 threshold above which a single-period phenotype is defined, the classifier returned a cathemeral phenotype in nearly every month.
+The travelling state, however, was the only exception: daytime activity rose to roughly 0.8\textendash 0.9, yielding predominantly Diurnal classifications (Fig.~\ref{fig6}; \hyperref[S3_File]{Additional file 3, Figs.~S8}).
+
+In the encamped state, nighttime activity was the largest component for most of the year ($p_{\text{n}} \approx 0.50-0.70$), and in the individual months when it exceeded 0.80, the most-supported phenotype shifted to Nocturnal. Notably, this was more frequent and pronounced in females and in Llanganates (\hyperref[S3_File]{Additional file 3, Figs. S6\textendash S7}).
+Encamped activity was nighttime-weighted early in the year and shifted toward daytime later, but with no significant switches between diurnal and nocturnal phenotypes.
+
+In the exploratory state, daytime and nighttime probabilities were more balanced (roughly 0.3\textendash 0.5), keeping the classification cathemeral apart from two sporadic Diurnal events in males when daytime
+activity was elevated (\hyperref[S3_File]{Additional file 3, Fig. S7}).
+
+Averaged across individuals, both Cayambe-Coca and Llanganates converged on daytime activity
+near 0.50 and nighttime near 0.40 with only minor twilight use, consistent with exclusive cathemeral classification and no diurnal preference at the regional level (\hyperref[S3_File]{Additional file 3, Fig. S9}).
+
+Detailed General and Selection hypotheses classifications are provided in \hyperref[S1_File]{Additional file~1}. Briefly, similar patterns to the Traditional hypothesis were detected in the former; General Cathemeral and Diurnal-Nocturnal classifications were predominant at all levels and combinations, except for the travelling state and its combinations which were classified as Diurnal at proportions greater than 70\%. Matias was the only bear to travel long distances at a 1:1 ratio of General Cathemeral and Diurnal phenotypes. The Selection hypothesis revealed a more complex pattern, with a greater diversity of classifications. However, the most common at different combinations was Day selection, followed by Day-Night and Equal selections (\hyperref[S1_File]{Additional file~1}; \hyperref[S1_File]{Additional file~2, Table S9}).
+
+These diel phenotype classifications were independently corroborated by camera trap detections of untagged Andean bears from other localities in Ecuador, Colombia, and Peru~\cite{zotero-item-6551}. These bears displayed behaviors traditionally seen during the day, including foraging, tree marking, and one observation of a male potentially chasing a female (\hyperref[S1_File]{Additional file~1}). This suggests that the cathemeral pattern documented here could be a species-level trait rather than an artifact of individual behavior or collar scheduling, with rare strictly diurnal or nocturnal deviations.
+
+\subsection{Movement metrics}
+
+CTSD estimation was attempted at multiple temporal scales with feasibility that varied by individual and step size. Whole-tracking-period and diel estimates were restricted to GPS-tagged individuals, while weekly estimates were obtained for both tag types.
+At the whole-tracking-period scale, DeeAnn, Paya, and all VHF-tagged bears in Cotacachi-Cayapas (except for Fernando) were best described by an Ornstein-Uhlenbeck (OU) process (\hyperref[S2_File]{Additional file~2, Table S2}), a CTMM inconsistent with speed estimation~\cite{noonanScaleinsensitiveEstimationSpeed2019}. At the weekly scale, 328 out of 820 windows could not be estimated because sampling intervals exceeded the velocity autocorrelation timescale, with the highest failure rates in Matias (64), Chalpar (52) and Porraca (35), and additional 54 windows were excluded for having diffusion DOF $< 5$.
+
+For diel-period estimates, average speeds were measurable for all bears during nighttime, though DeeAnn and Matias returned low ESS equal to 12 and 13, suggesting high measurement uncertainty (\hyperref[S2_File]{Additional file~2, Table S10}). During diurnal periods DeeAnn and Paya's average speeds remained inestimable for the same reason mentioned above, whereas Lorena exhibited the lowest $ESS = 5$ and wide CIs.
+
+\subsubsection{Whole-tracking-period average speeds}
+
+Average speeds across the tracking duration revealed a population average of 6.04 km/day (5.08\textendash 7.13). While males moved slightly faster than females (6.37 vs. 5.64 km/day), this difference was not statistically significant ($p = 0.08$).
+Movement was more strongly influenced by geography; bears in Cayambe-Coca traveled significantly faster than those in Llanganates, averaging 6.74 km/day compared to 5.1 km/day ($ p = 0.003$; \hyperref[S2_File]{Additional file~2, Table S11}).
+
+When isolating diurnal movement, activity levels varied significantly by age (\hyperref[S2_File]{Additional file~2, Table S11}), adults were found to be more mobile than subadults (8.16 vs. 7.36 km/day; $p < 0.001$). Conversely, while nocturnal movement was generally lower, it was driven by both sex and region. Males were more active at night than females (1.63 vs. 1.19 km/night), and Cayambe-Coca bears nearly doubled the nocturnal speed of those in Llanganates (1.73 vs. 0.91 km/night; $p < 0.00001$).
+
+Individually, Lorena and Matias exhibited the highest mobility during the day (11.19 km/day and 8.97 km/day, respectively), while the remainder of the cohort averaged approximately 7 km/day. However, Lorena's CIs were wide (6 \textendash 16 km/day) due to a small ESS (\hyperref[S2_File]{Additional file~2, Table S10}). Nighttime average speeds declined notably, yet Matias maintained the highest nocturnal speed at 2.71 km/night.
+
+\subsubsection{Weekly decoupled speeds and diffusion rates}
+
+The speed and diffusion GAMs used all individuals except Fernando due to his low number of fixes. The speed model based on $n = 426$ weekly observations explained 81.2\% of deviance, while the diffusion model based on $n = 734$ observations explained 45.3\%, reflecting the greater robustness of diffusion estimation at coarse sampling intervals (\hyperref[S2_File]{Additional file~2, Table S12 and S13}). Individual identity was a significant predictor in both models ($p < 0.001$), with diffusion showing greater among-individual variation than speed.
+
+Speed and diffusion varied by region and season through different mechanisms. In the former, bears in Cotacachi-Cayapas moved substantially slower than those in Cayambe-Coca ($p < 0.0001$; \hyperref[S2_File]{Additional file~2, Table S12}), with females moving around 11 times slower, yet speed was constrained in both sexes, hinting that dense vegetation may impose physical costs on movement. Seasonal variation in speed was nonlinear in Cotacachi-Cayapas  and Llanganates ($p < 0.001$; Fig.~\ref{diff_speed_gams}), with no sex differences in the latter  ($p = 0.58$; \hyperref[S2_File]{Additional file~2, Table S12}). In contrast, diffusion showed complex seasonality only in Cayambe-Coca ($p < 0.001$) but no sex differences ($p = 0.7$; Fig.~\ref{diff_speed_gams}).
+
+%% FIGURE 7
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1\textwidth]{Fig7_v6.pdf}
+  \caption{\textbf{Seasonal variation in diffusion rates and average speeds by sex and region.}
+    Points show individual weekly estimates filtered with effective degrees of freedom $\geq 5$. Colored lines and shaded ribbons show predicted means and 95\% confidence intervals from GAMs fitted with a sex-region interaction. The y-axis is log$_{10}$-scaled. Females with speed and diffusion higher than the regional average are labelled with dark gray triangles.}
+  \label{diff_speed_gams}
+\end{figure}
+
+A dissociation between speed and diffusion was observed in Llanganates (Fig.~\ref{diff_speed_gams}). While speed in this NP was statistically indistinguishable from Cayambe-Coca ($p = 0.18$), spatial breadth was significantly reduced by approximately 66\% ($p = 0.014$) and 73\% in Cotacachi-Cayapas ($p = 0.001$). These findings suggest that bears in Llanganates move at a comparable pace but within more restricted space, consistent with the intensive use of localized resource patches noted in the home range analysis.
+
+\subsubsection{Regional differences in intersex movement}
+
+Diffusion rates differed significantly between sexes in a region-dependent manner. Although the main effect of sex was non-significant in both models ($p > 0.4$; \hyperref[S2_File]{Additional file~2, Table S12 and S13}), significant sex and region interactions revealed that vegetation context constrains female but not male ranging behavior. Female diffusion was strongly suppressed in Cotacachi-Cayapas ($p = 0.001$) and Llanganates ($p = 0.013$) relative to Cayambe-Coca where intersex ranging differences were insignificant. Male diffusion remained high or increased across regions  ($p < 0.05$; Fig.~\ref{diff_speed_gams}).
+
+In Cotacachi-Cayapas, males moved approximately 2 times faster than females ($p = 0.003$) and ranged around 7 times more broadly ($p = 0.002$), largely exceeding regional female metrics (\hyperref[S2_File]{Additional file~2, Table S12 and S13}). In Llanganates, males showed marginally greater diffusion than females ($p = 0.045$) despite an absence of speed differences ($p = 0.5$; Fig.~\ref{diff_speed_gams}), reinforcing the distinction between the two metrics. Male bears in Llanganates covered more novel ground than females without moving proportionally faster, suggesting broader exploratory behavior rather than increased movement speed and therefore lower energy expenditure. This indicates that while locomotion speed is uniformly low in dense environments like Cotacachi-Cayapas for both sexes, area-use decisions remain more sex-strategy dependent.
+
+\subsubsection{Instantaneous speeds}
+
+We observed both population and individual-level variation in instantaneous speeds, with diel cycles and sex emerging as primary variation sources. Based on 25,667 values, we detected spectacled bears moved faster during the day (median 0.3 km/h, range: 0.2\textendash 1.5) than at night (0.04 km/h, 0.01\textendash 0.7; MW: $p < 0.0001$; Fig.~\ref{fig8}A; \hyperref[S3_File]{Additional file 3, Fig. S10}). This diel contrast was further modulated by sex.
+
+%% FIGURE 8
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Figure8_v6.png}
+  \caption{\textbf{Continuous-time instantaneous speeds.}
+    (A) Raincloud plots show population-level diel-based speeds displayed on a log-transformed axis with ticks representing values on the natural scale. (B) Individual speeds (km/h) in 24-hour cycles. The 95\% confidence intervals are shaded with dark and light grey indicating the lower and higher bounds of the estimate, respectively. Only nocturnal speeds $> 0.2$ are shown. (C) Boxplots of instantaneous speeds estimated from the diurnal and nocturnal subsets and for the (D) whole-tracking period displaying seasonal variation.}
+  \label{fig8}
+\end{figure}
+
+Males moved significantly faster than females ($p < 0.0001$) in a range of 0.03\textendash 1.5 km/h and displayed frequent speed bursts (Fig.~\ref{fig8}B). Females traversed at speeds of 0.01\textendash 1.3 and moved slightly faster than males during daytime ($p < 0.0001$, $r = 0.26$; \hyperref[S3_File]{Additional file 3, Fig. S10}). Individual variation was substantial within both sexes. During daytime hours, Chalpar reached up to 1.51 km/h, followed by Matias and Armando, both at 1.3 km/h. Both sexes accelerated beyond 0.14 km/h during nighttime, with fast-paced nocturnal bears peaking at 0.71 km/h for Chalpar, followed by Daniela (0.6 km/h), and Armando (0.4 km/h; Fig.~\ref{fig8}B).
+
+Habitat type significantly influenced movement speeds across diel cycles and seasons (Fig.~\ref{fig8}C\textendash D). Bears in Cayambe-Coca moved consistently faster than those in Llanganates ($p < 0.001$, Table~\ref{table2}). However, median speeds dropped significantly during the rainy season in both regions (KW: $p < 0.0001$). While males in Cayambe-Coca maintained seasonally constant speeds, females showed pronounced decelerations in the months of June\textendash August (KW: $p < 0.0001$). Interestingly, the diel pattern shifted between parks: Llanganates bears were more active during the day, whereas Cayambe-Coca bears maintained higher relative speeds at night ($p<0.0001$; Fig.~\ref{fig8}C; \hyperref[S3_File]{Additional file 3, Fig.~S11}).
+
+%% TABLE 2
+\begin{table}[h]
+  \caption{\textbf{Mann-Whitney U tests of instantaneous speeds.}
+    Median values (km/h) with observed minimum\textendash maximum ranges in parentheses. All $p$-values represent pairwise region comparisons within each category: diel, region, sex, and season. Effect sizes are reported as rank biserial correlations ($\widehat{r}^{\,}$), where  positive values indicate higher speeds in Cayambe-Coca and negative show higher speeds in Llanganates.}
+  \label{table2}
+  \small\setlength{\tabcolsep}{4pt}%
+  \begin{tabular}{|l|l|l|l|c|c|}
+    \hline
+    \textbf{Category}   & \textbf{Condition}  & \textbf{Cayambe--Coca} & \textbf{Llanganates}                  & \textbf{$p$--value}  & \textbf{$\widehat{r}^{\,}$} \\ \hline
+    \textbf{Annual}     & Overall             & 0.23 (0.14--1.51)      & 0.18 (0.12--1.33)                     & $< 10^{-10}$         &   $0.19$                   \\ \hline
+    \textbf{Seasonal}   & Sporadic rains      & 0.23 (0.19--1.33)      & 0.22 (0.14--1.14)                     & $< 10^{-10}$         &   $0.3$                    \\
+                        & Rainy               & 0.23 (0.14--1.27)      & 0.17 (0.12--1.33)                     & $< 10^{-10}$         &   $0.6$                    \\
+                        & Dry                 & 0.23 (0.19--1.51)      & 0.17 (0.14--0.92)                     & $< 10^{-10}$         &   $0.7$                    \\ \hline
+    \textbf{Sex}        & Female              & 0.19 (0.18--1.30)      & 0.18 (0.13--0.87)                     & $0.012$              &   $0.03$                  \\
+                        & Male                & 0.24 (0.14--1.51)      & 0.16 (0.14--1.33)                     & $< 10^{-10}$         &   $0.4$                    \\ \hline
+    \textbf{Diel}       & Day                 & 0.28 (0.16--1.51)      & 0.31 (0.22--1.32)                     & $< 10^{-10}$         &   $-0.3$                   \\
+                        & Night               & 0.05 (0.02--0.71)      & 0.03 (0.01--0.48)                     & $< 10^{-10}$         &   $0.7$                    \\ \hline
+  \end{tabular}
+\end{table}
+
+\subsubsection{Movement intensities follow diel temperature cycles}
+
+The HGAM analysis explained 85.5\% of deviance, revealing complex interactions driving movement speed and underlying the cathemeral activity pattern. The population-level diel smooth was highly significant ($p < 0.0001$), with predicted instantaneous speeds peaking between 12:00 and 16:00, declining through the evening, and a minimum between 00:00 and 05:00 (\hyperref[S3_File]{Additional file 3, Fig. S12}). A secondary pre-dawn increase occurred between 05:00\textendash 07:00. Notably, speed did not approach zero at any hour, which is probably due to limitations with the CTMMs, which assume movement occurs at all times. While individual variation in these patterns was substantial ($p < 0.0001$), males exhibited significant seasonal deviations ($p < 0.0001$; \hyperref[S3_File]{Additional file 3, Fig. S13}) that were minimal in females.
+
+%% FIGURE 9
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Fig9_v3.pdf}
+  \caption{\textbf{Interaction effects of temporal and environmental variables on instantaneous speeds.}
+    Heatmaps of the predicted partial effect on instantaneous speeds as a function of the temperature interaction with time of day (A), elevation (B), and day of year (C), expressed as the multiplicative change relative to the average partial effect of the interaction, where 1 indicates no deviation from the mean. Black contour lines in each panel are drawn at specific levels of multiplicative change. Light grey regions represent covariate combinations that do not occur in the empirical data.}
+  \label{fig9}
+\end{figure}
+
+Temperature emerged as the primary environmental driver of diel activity ($p < 0.0001$;\hyperref[S2_File]{Additional file 2, Table S14}; \hyperref[S3_File]{Additional file 3, Fig. S12}). At thermal window of approximately $5$\textdegree{}C\textendash $12$\textdegree{}C, bears were substantially faster than average across most daytime and evening hours (08:00\textendash 22:00), particularly during the late afternoon (18:00\textendash 21:00; (Fig.~\ref{fig9}A)).
+Conversely, at temperatures exceeding $> 14$\textdegree{}C, instantaneous speed was greatly suppressed across all hours, including during typically active periods. This heat avoidance behavior, was further evidenced by a modest positive partial effect detected during the pre-dawn window under warm conditions. Such flexibility allows individuals to exploit the coolest nightly hours when daytime heat surpasses their thermal tolerance.
+
+Similarly, elevation and seasonality modified the relationship of temperature and speed. The interaction between elevation and temperature ($p < 0.001$) revealed that speeds increased above 3,500~m a.s.l. under warm conditions (Fig.~\ref{fig9}B; \hyperref[S3_File]{Additional file 3, Fig. S12}), indicating rapid and directed movements through the páramo. Likewise, cold temperatures at low elevations ($< 2,800$~m a.s.l.) influenced rapid movements across agricultural and valley habitats during low-risk cool windows (Fig.~\ref{fig9}B). Conversely, warm temperatures at low elevations produced the strongest movement suppression in the model.
+
+The seasonal interaction with temperature was similarly well-supported ($p < 0.0001$), with cold conditions around November\textendash March associated with enhanced movement, coinciding with the elevated speeds documented during the harvest and dry seasons in Llanganates, and warm mid-year temperatures producing broad movement suppression consistent with the rainy season diffusion contraction in Cayambe-Coca (Fig.~\ref{fig9}C). The sampling interval correction term was significant at both the population and individual levels ($p < 0.0001$), confirming that GPS-derived speeds underestimate speeds at coarser sampling intervals~\cite{noonanScaleinsensitiveEstimationSpeed2019} and that this bias varies across bears (\hyperref[S2_File]{Additional file~2, Table~S14}; \hyperref[S3_File]{Additional file 3, Fig. S13}).
+
+\section{Discussion}
+
+Andean bears are increasingly venturing into the human domain in search of nourishment.
+While farming and cattle encroachment into natural habitats are well-known
+anthropogenic drivers of displacement, it is equally critical to understand the
+environmental factors shaping their movement behaviors, particularly under global warming
+scenarios. By compiling high resolution GPS data across multiple populations, this study
+achieved a fine-scale resolution that, until recently, was considered logistically
+unfeasible. This approach moves beyond broad range estimates to reveal the physiological
+and temporal constraints that dictate how Andean bears navigate a rapidly changing
+landscape.
+
+\subsection{Determinants of home range size}
+
+This first-of-its-kind population-scale
+analysis revealed sex as the main driver of home range and core area size, with males
+occupying territories, at least twice and in some cases up to fifteen times larger than
+those of certain females. For instance, Rebecca, who was rearing two cubs at a given time of
+tracking, exhibited restricted spatial use, likely reflecting strategies to minimize
+energy expenditure and risk during critical life
+stages~\cite{sechaudHomeRangeSize2022}, as documented in female grizzly
+bears~\cite{dahleHomeRangesAdult2003,dahleSeasonalRangeSize2003}.
+Nevertheless, females such as Porraca, Alejandra and Daniela exhibited areas comparable
+to those of males, suggesting exceptional spatial plasticity. At the
+individual-level, this demonstrates that females can forage across expansive
+landscapes as intensely as males, challenging traditional assumptions of
+sex-specific space use in the species.
+
+Our home range estimates surpassed previous findings, including the reevaluated
+VHF-tagged bears~\cite{castellanosAndeanBearHome2011}, with the largest male
+reaching an average 369.9 km\textsuperscript{2}, more than 150 km\textsuperscript{2}
+than the maximum home range reported in Colombia
+(238.86 km\textsuperscript{2}~\cite{rodriguezSpaceUseMale2021}). This discrepancy likely
+stems from area underestimation due to methodological differences (LoCoH vs AKDE,
+~\cite{silvaAutocorrelationinformedHomeRange2022}), although a re-evaluation
+under the framework used here, could reveal underlying biological and ecological factors
+driving such variation.
+
+Andean bears in this study traversed remote, rugged, and logistically challenging
+terrain. We found that weekly or seasonal displacements corresponded to frequent
+incursions into human-dominated landscapes, suggesting
+plastic and potentially adaptive movements across natural and modified environments
+(\hyperref[S1_File]{Additional file~1}). These incursions suggest that habitat loss may be forcing
+individuals into human-modified environments due to widespread deforestation
+of native
+habitat~\cite{garcia-rangelAndeanBearTremarctos2012,kattanRangeFragmentationSpectacled2004}.
+Our findings contrast with bear behavior in Colombia, where higher human density
+negatively affected bear presence~\cite{gonzalez-mayaTrueHighlanderHermit2025,castrillon-hoyosOccupancyHabitatUse2023}.
+
+Early research hypothesized seasonal occupation of distinct habitats based on fruiting
+cycles in the Ecuadorian páramos~\cite{chavezSeasonalityAndeanBear2021}, and Peruvian
+dry forests~\cite{suarezSeasonalDistributionFood1988}.
+Our fine-scale analysis supports the existence of seasonal habitat use irrespective of sex, life stage, or region. Bears exhibited
+extended stationary behaviors in weekly or monthly periods, occupying reduced areas as
+small as 0.1\textendash10 km\textsuperscript{2} (Fig.~\ref{fig3}, \hyperref[S3_File]{Additional file 3, Fig.~S3}),
+likely driven by increased food
+availability~\cite{mezziniHowResourceAbundance2025}. In fact, young Chalpar remained for two months at the slopes of the Cayambe volcano (4,000 m.a.s.l.; \hyperref[S1_File]{Additional file~1}), probably consuming \textit{Hesperomeles obtusifolia}, a high-altitude (4,200 m.a.s.l) fruit that we have found to be part of the species diet in the area (\hyperref[S3_File]{Additional file 3, Fig. S14}).
+
+During corn harvest season in Llanganates, bears remained within reduced areas
+but moved away as the rainy season began (Fig.~\ref{fig3}, \hyperref[S1_File]{Additional file~1}), with
+larger displacements towards the páramos likely associated with the fruiting of
+morti\~{n}o. Similar range shifts occurred in Cayambe-Coca during both the
+rainy and dry seasons (Fig.~\ref{fig3}), coinciding with the availability of achupalla
+in the páramos.
+
+\subsection{Spatial tolerance and overlap}
+
+Patterns of space sharing revealed how resource distribution and landscape fragmentation
+shape tolerance, yet with no evidence of close encounters between synchronously tagged individuals (Fig.~\ref{fig4}; \hyperref[S1_File]{Additional file~1}). As observed in Cotacachi-Cayapas, males and females showed near-complete spatial overlap while exploiting a mosaic of native vegetation and human-modified patches~\cite{castellanosAndeanBearCore2013}.
+This included seasonal corn crops, perennial \textit{Chusquea}
+bamboo stands, and epiphytic \textit{Guzmania} bromeliads that are a source of water, sugar and protein  year-round. Field observations confirmed that some females frequently occupied areas rich in achupallas,
+\textit{Bromelia} spp., \textit{Miconia}, and \textit{Cavendishia}.
+
+Similarly, in Llanganates, overlaps between Armando, Alejandra, and the
+long-lived DeeAnn, were attributed to the seasonal availability of
+corn. The extensive area overlap appears to be driven by convergence on nutritional hotspots within fragmented landscapes across a steep altitudinal gradient (Fig.~\ref{fig4}). Conversely, Lorena avoided the convergent territory and exploited other agricultural crops within reduced weekly home ranges (20.4 km\textsuperscript{2}, \hyperref[S1_File]{Additional file~1}), suggesting individual-level variation in foraging strategy.
+
+These behaviors reinforce the hypothesis that Andean bear spatial ecology is shaped not
+only by intrinsic factors such as individual behavior, sex or evolutionary history (\hyperref[S1_File]{Additional file~1}), but also by extrinsic drivers like resource stochasticity~\cite{mezziniHowResourceAbundance2025}, and landscape structure. In fragmented Andean landscapes, where ecological richness coexists with anthropogenic pressure, spatial overlap may represent an adaptive strategy rather than evidence of habitat saturation.
+
+\subsection{Seasonal movement dynamics}
+
+While dynamic area estimates highlight how resources and fragmentation shape space use,
+movement metrics reveal the pace and scale at which bears navigate these landscapes,
+offering further insights into energy expenditure and landscape resistance (\hyperref[S1_File]{Additional file~1}). Our analysis reveals that average speeds and diffusion rates capture different and complementary dimensions of Andean bear movement.
+The dissociation between these two metrics across study regions demonstrates that movement behavior in this species operates at multiple spatial and temporal scales, and corresponds precisely to the resource phenology of each protected area.
+
+Speed and diffusion were suppressed in females in Cotacachi-Cayapas but diffusion sex differences were proportionally larger, with no evidence of seasonal fluctuations. Cotacachi-Cayapas is characterized by dense cloud forests at steep altitudinal
+gradients, with a mosaic of native vegetation and human-modified patches. The local landscape structure may, thus, impose substantial locomotion costs on patchy terrains~\cite{halseyTerrestrialMovementEnergetics2016}, while simultaneously offering reliable, spatially concentrated food sources, reducing the need for extensive travel.
+This results in movement strategies characterized by slow, intensive, localized foraging rather than rapid and broad ranging. Male bears in the region reach diffusion rates comparable to males in Cayambe-Coca, which is consistent with typical space-use strategies driven by mate-searching as documented in brown bears~\cite{dahleSeasonalRangeSize2003}.
+
+The extensive home range and core area overlap between males and females documented in Cotacachi-Cayapas is thus consistent with movement patterns: females are moving slowly through resource-rich areas, while males range broadly over the same landscape at greater speed, with convergence occurring at predictable nutritional hotspots.
+
+Males and females in Cayambe-Coca only display pronounced seasonal diffusion peaks during the dry seasons, coinciding with the availability of achupalla in the páramos~\cite{chavezSeasonalityAndeanBear2021}. This matches our home range analysis and supports hypotheses regarding bears tracking fruiting cycles~\cite{peytonEcologyDistributionFood1980}. The diffusion decrease during the rainy season suggests bears consolidate space use around reliable food sources and implies active habitat selection.
+
+In Llanganates, speed seasonality was pronounced but diffusion seasonality was absent: speed increases during corn harvest without a corresponding increase in diffusion, which indicates intensive exploitation of localized agricultural patches (Fig.~\ref{diff_speed_gams}). The subsequent decline in speed during the dry season suggests a transition to lower-intensity foraging. This behavioral signature as fast and localized exploitation during the first months of the year, and slower and more exploratory thereafter has direct implications for managing agricultural exposure and human-wildlife conflict.
+
+\subsection{Sex biased dispersal and female plasticity}
+
+The spatial extents occupied by bears, coupled with the movement metrics presented here, elucidate a trade-off between energy expenditure and gene flow (\hyperref[S1_File]{Additional file~1}), forming foundational hypotheses for future landscape genetics studies.
+Genetic evidence of female philopatry and restricted dispersal~\cite{cuevaEvidencePopulationGenetic2024} aligns with the low diffusion rates ($<$ 1 km\textsuperscript2/day) and small core areas seen in females like Lorena and Paya. Conversely, males like Matias, Armando, and Pancho exhibited large home ranges and diffusion (2.7\textendash4.1 km\textsuperscript{2}/day), consistent with male-biased dispersal. Albeit Gilo had the largest areas and lowest male diffusion estimates across his tracking period (\hyperref[S2_File]{Additional file~2, Table~S2}).
+
+Individual identity and plastic behaviors, thus, were shown to have a strong influence in diffusion rates, with some females exhibiting weekly movement metrics higher than males or the population average (Fig.~\ref{diff_speed_gams}). These deviations challenge a strictly sex-based dispersal model. Daniela, a female, demonstrated extreme displacement behavior, alternating between long-distance movements and localized residency. Similarly, Rebecca showed directionally persistent movement (\hyperref[S3_File]{Additional file 3, Fig. S5}) with relatively high daytime
+diffusion rate (2 km\textsuperscript{2}/day), and average speeds of 7 km/day,
+despite a compact core area (3.27 km\textsuperscript{2}), suggesting episodic exploratory
+movement from a stable base. Showing that some bears are more spatially expansive than others regardless of sex, region, or season and are likely the primary drivers of long-distance gene flow and human-wildlife conflict.
+
+This raises new hypotheses and challenges the traditional view of the sedentary Andean bear female: (1) female movement may be more plastic than previously
+assumed, especially in fragmented or resource-variable habitats suggesting that they might also play a critical role in maintaining population connectivity; and (2) speeds
+and diffusion rates may not solely reflect dispersal intent but also territorial
+negotiation or exploratory scouting, particularly in transitional life stages. Similar behaviors have been noted in giant pandas~\cite{connorTelemetryResearchElusive2016} and female brown bears~\cite{penterianiMatingFemalePerspective2025}, where this active role in mating is hypothesized as a means to avoid infanticide.
+
+Future work integrating telemetry with genetic sampling could test whether
+high-diffusion females represent dispersing individuals or temporary
+range-shifters.
+Additionally, modeling landscape resistance in relation to female movement corridors may
+reveal whether philopatry is ecologically constrained or behaviorally reinforced.
+
+\subsection{Complex diel locomotion patterns}
+
+Movement metrics showed a marked increase in movement during daytime hours, with peak
+instantaneous speeds reaching 1.51 km/h and average speeds up to 8\textendash12 km/day. Nevertheless,
+population estimates displayed notable nocturnal behavior of 1.54 km/night. Terrain steepness, however, did not appear to constrain movement speed: individuals such as Matias, Chalpar, and Lorena maintained high velocities despite consistently traversing steep slope landscapes even at nighttime hours given Matias' displacements $>2$ km/night (Fig.~\ref{fig8}; \hyperref[S2_File]{Additional file~2, Table S10}).
+These movement rates underscore the Andean bear's capacity to sustain rapid travel across inclined terrain, a trait uncommon among ursids (\hyperref[S1_File]{Additional file~1}).
+
+Furthermore, diurnal and nocturnal movement patterns shifted between regions, bears in Llanganates were faster than those in Cayambe-Coca during the day. This regional variation may reflect differences in human activity patterns, and resource distribution. In fact, the HGAMs revealed that these differences are an emergent property of thermal switching and microclimatic conditions that influence the temporal diel niche of bears. The increased nocturnal speeds in Cayambe-Coca could also be a response to higher daytime human disturbance or a strategy to exploit nocturnal food resources.
+
+\subsection{Temperature-driven cathemerality}
+
+Andean bears reveal temporal flexibility in their activity schedules, underscoring that their movement ecology is shaped not only by spatial constraints but also thermal dynamics.
+This study offers the most detailed analysis to date of Andean bear movement patterns over a full 24-hour cycle, demonstrating that the species exhibit a cathemeral or diurnal-nocturnal phenotypes under General and Traditional hypotheses frameworks~\cite{gerberModelbasedHypothesisFramework2024}, while appearing mostly diurnal under Selection hypotheses sets.
+
+This challenges previous assumptions that Andean bears are strictly diurnal~\cite{parra-romeroNotEatingAlone2019} and reveals unexpected behavioral plasticity.
+While our dataset is limited to three Ecuadorian NPs and some camera trap records from international localities (see \hyperref[S1_File]{Additional file~1}~\cite{zotero-item-6551}), the sporadic 24-hour activity patterns observed and supported by different analytical approaches, also align with observations from three reintroduced bears in Maquipucuna~\cite{castellanosEcologiaComportamientoOsos2005}, located at least 100 km from the study sites.
+
+The emergence of this pattern across disparate localities, thus, raises the question: is this a sustained behavior across the species' geographical distribution or might this diel phenotype respond locally to unexplored environmental conditions?
+All other bear species have also been reported to be cathemeral (\hyperref[S1_File]{Additional file~1};~\cite{sibaraniUsingBycatchData2024,kawamuraDielMonthlyActivity2022,wareClockKeepsTicking2020}),
+hinting that this may be an ancestral character state widespread among the ursids, and which may have originated as a thermoregulatory adaptation that persisted across the bear radiation.
+By increasing movement during the night, Andean bears may inadvertently utilize a temporal window of
+opportunity to forage across anthropogenic landscapes when human surveillance is minimal.
+Several mammalian species have been documented to increase nocturnal habits as a strategy to circumvent human disturbance and persecution risk~\cite{gaynorInfluenceHumanDisturbance2018}.
+
+Both behavioral state prediction via HMMs and GAMs revealed that temperature is a key driver of diel behavioral switch and movement change. The appearance of activity distributed across the 24-hour cycle emerges not from a fixed internal preference but from temperature-driven behavioral responses. On cold days, bears maintained a broad diurnal-to-vespertine active window; on warm days, they suppress daytime locomotion and shift toward pre-dawn or evening activity.
+
+Future research should explore how climate change-induced temperature shifts in Andean ecosystems may alter diel behaviors. Inferring how this diel phenotype will respond to drastic thermal fluctuations is an urgent priority. Furthermore, the relative influence of thermal constraints versus anthropogenic pressures remains to be assessed. Are bears actively avoiding humans at certain times of day, or is their nocturnal activity primarily driven by temperature? Understanding this balance is imperative for developing effective conservation strategies that mitigate human-wildlife conflict while also considering the impacts of climate change on bear behavior.
+
+The Andean bear offers a particular study system for such investigation given the steep thermal gradients available across its altitudinal range, that we show to be relevant given its complex surface interaction with speed and temperature (Fig.~\ref{fig9}).
+
+\subsection{Conservation strategies and recommendations}
+
+Compounding threats, including the increasingly frequent sightings of Andean bears near touristic infrastructure and highways~\cite{castellanosAreReportsCub2019}, have contributed to its classification as Vulnerable on the IUCN Red List across its geographic range~\cite{velez-liendoTremarctosOrnatusIUCN2016}, and endangered in Ecuador since 2001~\cite{cuestaOsoAnteojos2001}.
+While past studies have noted human-bear interactions, this study highlights the urgent need for proactive and temporally dynamic conservation measures.
+
+Our findings suggest that conservation strategies must reflect the extensive areas that both sexes occupy. The largest average male home range we documented (369.9 km\textsuperscript{2}) raises concerns about whether current protected areas are sufficient to sustain viable populations.
+Similar challenges have been noted for other wide-ranging mammals like jaguars~\cite{delatorreHabitatAvailabilityConnectivity2017} and black bears~\cite{zellerBlackBearsAlter2019}, where protected areas alone are insufficient to encompass their ecological requirements.
+
+Therefore, conservation strategies must account not only for broad home range requirements but
+also for diel and seasonal dynamics, and ecological context that influence how Andean bears use
+landscapes. The seasonal behavioral switches reported here\textemdash fast and localized during harvest, slower and more exploratory thereafter\textemdash have direct implications for human-wildlife conflict management, as they identify the first half of the year as the period of maximum agricultural exposure in regions like Llanganates and Cotacachi-Cayapas.
+
+Given the dynamic and flexible nature of bear behaviors, such strategies must move beyond static mapping to incorporate the temporal dimensions of their ecology, addressing not only where risk is highest but also when and under what conditions bears are most active. However, to ensure these strategies are feasible, it is necessary to collaborate with local communities and organizations to verify if their implementation is actionable within the local socio-economic context.
+Furthermore, sustained engagement from government agencies remains essential to complement these efforts and ensure long–term protection of both bears and the ecosystems they help sustain.
+
+To this end, we propose: (1) creating ecological corridors accounting for multi-demographic movement that respond to behavioral plasticities and maintain movement continuity across fragmented forest patches;
+(2) prioritizing the designation of functional altitudinal linkages between highland and lowland ecosystems to mitigate human-wildlife conflict and safeguard crucial foraging grounds;
+(3) establishing dynamic buffer zones between agricultural areas and bear habitats that expand and are strictly enforced during peak seasonal activity to reduce direct encounters;
+(4) implementing community-based conservation programs that translate into actionable risk calendars for agro pastoral planning like grazing rotation or nocturnal livestock enclosure.
+Stakeholders can then mitigate conflict based on specific times of day or seasons when bears are most active.
+This ensures that conservation strategies address not only where bears move, but also when they are most likely to overlap with human activity.
+
+\subsection{Data sharing and collaboration}
+
+For decades, data sharing has been constrained by challenges in ensuring proper recognition for authors and collaborators. Field researchers often dedicate many years to collecting VHF, GPS, and camera trap data under physically demanding and resource-limited conditions, yet these datasets along with associated
+analytical code frequently remain unpublished.
+This ``data lockdown'' limits opportunities for independent reevaluation, slows regional comparisons and
+restrict the integration of emerging analytical tools.
+
+Currently, collaborative platforms such as Movebank allow
+animal tracking data to be shared seamlessly while guaranteeing contributor attribution.
+These platforms have transformed research enabling cross-border analyses of movement
+ecology, habitat use, and conservation threats. For Andean bears, whose range spans
+multiple countries and diverse ecological zones, the potential for comparative synthesis
+is immense. We urge Andean bear researchers to accompany future publications with accessible datasets
+and reproducible code. Data sharing not only reduces research costs, but also
+accelerates, refines and broadens our collective understanding of this elusive species.
+
+The long-term telemetry data presented here, spans over two decades and represents an investment of approximately USD 300,000, offering a foundational and invaluable resource for future research.
+By making these datasets accessible, we enable the reallocation of limited funding toward complementary conservation actions such as genetic sampling, landscape genetics, corridor modeling and community engagement.
+
+Our study demonstrates the value of sustained monitoring: detailed movement metrics, and diel activity patterns which reveal previously unknown behaviors. As technologies become more affordable and analytical methods more sophisticated, the potential to uncover the hidden lives of Andean bears grows rapidly.
+However, technological advancement alone is insufficient. Progress will depend on open data policies and cross-institutional collaboration within and across countries, ensuring that the knowledge gained from decades of fieldwork translates into tangible protection for the species and the ecosystems it sustains.
+
+%%=============================================================%%
+%%  CONCLUSIONS
+%%=============================================================%%
+\section{Conclusions}
+
+Individual bear home ranges among sexes are broader and more variable than traditionally assumed, with some females occupying areas as large as some males. Although there was a significant difference between sexes, the largest average home ranges are substantially larger than previously thought. Accordingly, conservation strategies should adopt a unified approach while enhancing the design and implementation of buffer zones which extend beyond existing protected areas to encompass the broader spatial needs of the species.
+
+This study presents strong evidence supporting a cathemeral diel niche in a subpopulation of Ecuadorian Andean bears. While individual variation in movement patterns exists, the consistent influence of temperature as movement driver suggests that flexible diel behavior may be widespread across the species, supported by camera trap data from untagged specimens from Colombia, Ecuador and Peru.
+Future research should prioritize GPS-monitoring and camera trap integration across the species' geographic range to further refine behavioral models by capturing twilight and nocturnal activity, a dimension historically underrepresented in ecological studies.
+
+Finally, one of our central objectives is the democratization of ecological data. Openly sharing telemetry datasets not only honors the labor invested in long-term fieldwork but accelerates scientific progress and broadens conservation impact.
+This is urgent not only due to the rapid pace at which environmental change is transforming natural habitats into anthropogenic landscapes, but also as a mean to promote the training of future researchers and conservation practitioners.
+Regardless of the specific strategy, a fundamental pillar must be the strengthening of data collection efforts.
+
+%%=============================================================%%
+%%  LIST OF ABBREVIATIONS
+%%=============================================================%%
+\section*{Abbreviations}
+
+\noindent
+\textbf{AKDE}: Autocorrelated Kernel Density Estimate \\
+\textbf{CI}: Confidence Interval \\
+\textbf{CTMM}: Continuous-Time Movement Model \\
+\textbf{CTSD}: Continuous-Time Speed and Distance \\
+\textbf{DOF}: Degrees of Freedom \\
+\textbf{ESS}: Effective Sample Size \\
+\textbf{GAM}: Generalized Additive Model \\
+\textbf{GPS}: Global Positioning System \\
+\textbf{HGAM}: Hierarchical Generalized Additive Model \\
+\textbf{HMM}: Hidden Markov Model \\
+\textbf{IID}: Independent and Identically Distributed \\
+\textbf{KDE}: Kernel Density Estimate \\
+\textbf{KW}: Kruskal-Wallis Test \\
+\textbf{LoCoH}: Local Convex Hull \\
+\textbf{MCP}: Minimum Convex Polygon \\
+\textbf{MW}: Mann-Whitney U Test \\
+\textbf{VHF}: Very High Frequency
+
+%%=============================================================%%
+%%  BACK MATTER: DECLARATIONS
+%%=============================================================%%
+\backmatter
+
+\section*{Declarations}
+
+\noindent\textbf{Ethics approval and consent to participate}
+
+All capture and tracking efforts were conducted under permits issued by the Ministerio del Ambiente, Agua y Transici\'{o}n Ecol\'{o}gica del Ecuador (MAATE), including 004-11 IC-FAU-DPN/MA, 23-2014-IC-FAU-DPAP/MA, 23-2014-AD-IC-FAU-DPAP-MA, 003-2015-RIC-FAU-DPAP-MA, 003-2015-AD-RIC-FAU-DPAP-MA, 005-2017-RIC-FAU-DPAP-MA, 001-2018-IC-FAU-DPAP-MA, 001-2018-IC-AD-FAU-DPAP-MA, 004-2019-RIC-FAU-DPAPCH-MA, MAAE-ARSFC-2020-0642, MAAE-ARSFC-2021-1644, MAATE-ARSFC-2022-2583, and MAATE-ARSFC-2023-0145. To ensure minimal stress during immobilization, we followed standardized protocols for sedation, monitoring, and post-release evaluation, in accordance with best practices in wildlife research and the ethical guidelines of the American Society of Mammalogists' Animal Care and Use Committee~\cite{sikes2016GuidelinesAmerican2016}.
+
+\noindent\textbf{Funding}
+
+Marjorie Chiriboga 2000, capture campaigns (AC). DeeAnn Wilfong 2021 capture campaign (AC). IBA field and capture campaign grants (AC). IBA 2017 conference award (AC). Parco Natura Viva field-campaign (AC), Wildlife Conservation Society Ecuador: capture campaigns (AC). IBA 2024 conference award (FXC). National Geographic Society: field campaigns (AC). IKI/KfW Development Bank (BMZ project no.  2098,10,987): collar acquisition (AC). Zoo Conservation Outreach Group/Daniel Hilliard: field and capture campaigns (AC).
+El Punto/Carla Toro field and capture campaigns (AC). Termas Papallacta/ Diego Zaldumbide: field and capture campaigns (AC). AmbienConsul/Tashquin Meza: capture campaigns (AC).
+
+\noindent\textbf{Consent for publication}
+
+Not applicable.
+
+\noindent\textbf{Availability of data and code}
+
+All code and files necessary to reproduce these results will be available upon publication at \url{https://github.com/Xacfran/andean\_bears}. Only the fine-scale movement animations have been modified to exclude sensitive information like the longitude/latitude and dates to protect these vulnerable individuals. However, animations with sensitive information and the code to generate them can be shared with researchers or organizations upon request to the corresponding authors. Moreover, to ensure these findings are not locked behind a language barrier and hinder their practical application to conservation, we have released a Spanish version of this work also available on the Github repository.
+
+\noindent\textbf{Competing interests}
+
+The authors declare no competing interests.
+
+\noindent\textbf{Declaration of Generative AI in scientific writing}
+
+During the preparation of this manuscript, FXC and DJ used Google Gemini 3.1 Deep Think models to assist with finding inconsistencies in the text, improving readability and suggesting additional references, which were read, reviewed, and validated before being added to cited literature. The authors reviewed and edited the content and take full responsibility for the content of this publication.
+Andean bear vectors in Figure 1 were generated from a sketch drawn by FXC and improved with Microsoft Designer and Adobe Illustrator Artificial Intelligences and further modified by FXC to keep biological accuracy.
+
+\noindent\textbf{Author contributions}
+
+Conceptualization: FXC, AC. Data curation: FXC, AC. Formal Analysis: FXC. Funding Acquisition: AC, DJ, JB. Investigation: FXC, AC, DJ. Methodology: FXC, SM. Supervision: AC, SM. Validation: FXC, AC, SM. Visualization: FXC. Writing original draft: FXC, AC, DJ. Writing review \& editing: all authors.
+
+
+\noindent\textbf{Acknowledgements}
+
+We thank the team of guides and trackers whose tireless efforts made this work possible, including numerous park rangers and technicians. In the Cotacachi-Cayapas National Park, we were assisted by Milton Arcos, Alberto Tabango, and Samuel Ayala. In the Cayambe Coca National Park, we thank Melchor Ascanta, Rodrigo Ascanta, Óscar Ascanta, and their canine units\textemdash~without whom the capture of large mammals in Ecuador would not be a reality. In Llanganates National Park, we thank the Martínez Pérez family, especially Edgar Martínez and Juan Fernando Duran.
+
+We are grateful to all those who assisted directly or indirectly during the field expeditions: ángel Yánez and Leonardo Arias Cardenas. We especially thank Dolores and Gilberto Insuasti, Mariana Santos and Castellanos Peñafiel family for their unconditional support and encouragement through more than two decades of work. We are also grateful to Daniel Rodríguez, Danilo Vásquez, Heinz Plenge, and Francisco Sánchez Karste for kindly providing camera trap records as additional evidence of crepuscular and nocturnal activity in Andean bears.
+
+This work was significantly improved by the teachings, insights, and recommendations of tutors and colleagues at the 2023 AniMove workshop. Likewise, Roland Kays and Natasja van Gestel guided early stages of the analysis, and Sean Sutor provided help with Figure 1, and suggested the inclusion of the HMMs to this work. We are indebted to you all.
+
+Last but not least, we are profoundly grateful to Dave Goucher, Ivan Reyes, Fred and Donna Caswell, Michele Chartier, Jonathan Howarth, Ruthmery Pilco Huarcaya, Alan Roedell, Lorena Rodríguez, and two anonymous donors for their economic contributions toward the publication of this article.
+
+%%=============================================================%%
+%%  ADDITIONAL FILES
+%%=============================================================%%
+\bmhead{Additional files (available upon publication)}
+
+\noindent\label{S1_File}\textbf{Additional file 1.} Extended methods, results and discussion.
+Includes the description of weekly and monthly individual movements, and the description of crepuscular and nocturnal behaviors of untagged bears in Colombia, Ecuador and Peru captured by camera traps.
+
+\noindent\label{S2_File}\textbf{Additional file 2.} Supplementary tables numbered in order of appearance in-text.
+
+\noindent\label{S3_File}\textbf{Additional file 3.} Supplementary figures numbered in order of appearance in-text.
+
+\bibliography{castellanos-main}
+
+\end{document}
